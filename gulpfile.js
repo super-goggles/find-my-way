@@ -1,4 +1,4 @@
-const { src, dest, parallel, watch } = require("gulp");
+const { src, dest, series, watch } = require("gulp");
 const gulpWebpack = require("webpack-stream");
 const cleanCSS = require('gulp-clean-css');
 
@@ -21,9 +21,9 @@ const processScripts = () => {
 const watchTask = () => {
   return watch(
     ["src/**/**/**"],
-    parallel(processPages, processStyles, processScripts)
+    series(processPages, processStyles, processScripts)
   );
 };
 
-exports.default = parallel(processPages, processStyles, processScripts);
+exports.default = series(processPages, processStyles, processScripts);
 exports.watch = watchTask;
