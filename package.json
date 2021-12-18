@@ -19,6 +19,8 @@
   "homepage": "https://github.com/super-goggles/find-my-way#readme",
   "devDependencies": {
     "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.3.0",
+    "webpack": "^5.65.0",
     "webpack-stream": "^7.0.0"
   }
 }
