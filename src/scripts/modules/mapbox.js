@@ -1,6 +1,10 @@
 let query = document.querySelectorAll("input");
 let originsList = document.querySelector(".origins");
 let destinationsList = document.querySelector(".destinations");
+let originLat;
+let originLon;
+let destinationLon;
+let destinationLat;
 
 const getGeocode = (url) => {
   return fetch(url).then((response) => response.json());
@@ -40,6 +44,7 @@ const handleOriginGeocode = (e) => {
     ).then((geocodeData) =>
       geocodeData.features.forEach((geocode) => {
         renderOriginsList(geocode);
+        // planTrip(geocode.center)
       })
     );
   }
@@ -63,6 +68,19 @@ const handleDestinationGeocode = (e) => {
 const handleSelectedLocation = (e) => {
   const li = e.path.filter((el) => el.nodeName === "LI")[0];
   li.classList.add("selected");
+  const ul = e.path.filter((el) => el.nodeName === "UL")[0];
+  if (ul.className === "origins") {
+    originLon = li.dataset.long;
+    originLat = li.dataset.lat;
+  } else if (ul.className === "destinations") {
+    destinationLon = li.dataset.long;
+    destinationLat = li.dataset.lat;
+  }
+  console.log(destinationLat, destinationLon, originLat, originLon);
+  planTripButton.addEventListener(
+    "click",
+    planTrip(originLon, originLat, destinationLon, destinationLat)
+  );
 };
 
 query[0].addEventListener("keydown", handleOriginGeocode);
@@ -81,3 +99,17 @@ destinationsList.addEventListener("click", (e) => {
   }
   handleSelectedLocation(e);
 });
+
+// const apiKey = 'KSqHBqfL3yaUR9M-u75p';
+// const baseURL = 'https://api.winnipegtransit.com/v3/'
+
+const planTrip = (originLon, originLat, destinationLon, destinationLat) => {
+  console.log("hey there");
+  return fetch(
+    `https://api.winnipegtransit.com/v3/trip-planner.json?api-key=KSqHBqfL3yaUR9M-u75p&origin=geo/${originLat},${originLon}&destination=geo/${destinationLat},${destinationLon}`
+  )
+    .then((response) => response.json())
+    .then((tripPlanningData) => console.log(tripPlanningData));
+};
+
+let planTripButton = document.getElementById("plan-trip");
